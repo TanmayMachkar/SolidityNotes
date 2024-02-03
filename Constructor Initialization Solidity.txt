@@ -1,0 +1,35 @@
+constructor initialization solidity
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract x{
+    string public name;
+
+    constructor(string memory _name)
+    {
+        name = _name;
+    }
+}
+
+contract y{
+    string public text;
+
+    constructor(string memory _text)
+    {
+        text = _text;
+    }
+}
+
+//inheritance
+contract B is x("Input is X"), y("Input is Y"){
+
+}
+
+contract C is x,y{
+    constructor(string memory _name, string memory _text) x(_name) y(_text){}
+}
+
+contract D is x,y{
+    constructor() x("X was called") y("Y was called"){}
+}

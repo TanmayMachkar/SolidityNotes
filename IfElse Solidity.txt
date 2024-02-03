@@ -1,0 +1,26 @@
+if else solidity
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract ifelse{
+    uint256 public myNum = 5;
+    string public myString;
+
+    // function get(uint256 _num) public returns(string memory)
+    // {
+    //     if(_num == 5)
+    //     {
+    //         myString = "Value of myNum is 5";
+    //     }
+    //     else 
+    //     {
+    //         myString = "myNum is not 5";
+    //     }
+    // }
+
+    function shortHand(uint256 _num) public returns(string memory)
+    {
+        return _num == 5 ? myString = "myNum is 5" : myString = "myNum not 5";
+    }
+}
