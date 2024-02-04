@@ -1,0 +1,45 @@
+struct solidity
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract Struct{
+    struct Todo{
+        string text;
+        bool completed;
+    }
+    Todo[] public todos;
+
+    function create(string calldata _text) public {
+        //1. calling it like a function
+        todos.push(Todo(_text, false));
+        //2. Key value mappping
+        // todos.push(Todo({text: _text, completed: false}));
+
+        // //3. Initialize an empty struct and then update it
+        // Todo memory todo;
+        // todo.text = _text;
+        // //todo.completed initialized to false
+        // todos.push(todo);
+    }
+
+    //Solidity already creates a getter for 'todos' so 
+    //you don't need to create this function
+    function get(uint _index) public view returns(string memory, bool)
+    {
+        Todo storage todo = todos[_index];
+        return  (todo.text, todo.completed);
+    }
+
+    function updateText(uint _index, string calldata _text) public{
+        Todo storage todo = todos[_index];
+        todo.text = _text;
+    }
+
+    function updateCompleted(uint _index) public{
+        Todo storage todo = todos[_index];
+        todo.completed = !todo.completed;
+    }
+}
+
+
