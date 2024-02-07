@@ -1,0 +1,55 @@
+payable solidity
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract Payable{
+    address payable public owner;
+
+    //payable constructor can receive ether
+    constructor() payable {
+        owner = payable(msg.sender);
+    }
+
+    //Function to deposit ether into this contract
+    //call this function along with some ether
+    //the balance of this contract will be automatically updated
+    function deposit() public payable{}
+
+    //call this function along with some
+    //the function will throw an error since this function is not payable
+    function notPayable() public{}
+
+    //Function to withdraw all Ether from this contract
+    function withdraw() public{
+        uint amount = address(this).balance;
+
+        //send all ether to owner
+        //owner can receive ether since the address of owner is payable
+        (bool success, ) = owner.call{value: amount}("");
+        require(success, "Failed to send ether");
+    }
+
+    //Function to transfer Ether from this contract to address from input
+    function transfer(address payable _to, uint _amount) public{
+        //note: 'to' was declared as payable
+        //In Solidity, when a function accepts an address parameter, 
+        //declaring it as payable indicates that the address can 
+        //receive Ether
+        (bool success, ) = _to.call{value: _amount}("");
+        require(success, "Failed to send ether");
+    }
+}
+
+
+// uint amount = address(this).balance;: This line calculates the total balance of Ether stored in the smart contract. address(this) refers to the address of the contract itself, and .balance retrieves the balance of Ether stored in this address.
+
+// (bool success, ) = owner.call{value: amount}("");: This line sends all the Ether stored in the contract to the owner address. It uses the .call function to send Ether. The {value: amount} specifies the amount of Ether to send, which is the entire balance of the contract. The empty string "" is used to pass any additional data, which is not necessary in this case.
+
+// owner: This is the address of the owner of the contract, specified as a payable address when the contract is deployed.
+// call: This is a low-level function for calling other contracts. Here, it's used to send Ether to the owner.
+// value: amount: This specifies the amount of Ether to send, which is the entire balance of the contract.
+// (bool success, ): The .call function returns two values: a boolean indicating success (true if the call was successful, false otherwise), and any data returned by the call (which is not relevant here, hence the empty second variable).
+// require(success, "Failed to send ether");: This line ensures that the Ether transfer was successful. If the transfer fails for any reason (for example, if the owner address is not payable or if the transfer runs out of gas), the transaction will revert, and the error message "Failed to send ether" will be provided.
+
+// Overall, this function allows the owner of the contract to withdraw all the Ether stored in the contract while ensuring that the transfer is successful.
