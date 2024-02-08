@@ -1,0 +1,44 @@
+calling contract inside another contract solidity
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract Callee{
+    uint public x;
+    uint public value;
+
+    function setX(uint _x) public returns(uint){
+        x = _x;
+        return x;
+    }
+
+    function setXandCallEther(uint _x) public payable returns(uint, uint){
+        x = _x;
+        value = msg.value;
+
+        return (x,value);
+    }
+}
+
+contract Caller{
+    function setX(Callee _callee, uint _x) public{
+        uint x = _callee.setX(_x);
+    }
+
+    function setXFromAddress(address _addr, uint _x) public{
+        Callee callee = Callee(_addr);
+        // Callee(_addr): This is a type conversion or casting operation. It creates 
+        //an instance of the Callee contract by taking the address _addr and converting 
+        //it to the Callee contract type.
+        // So, in summary, Callee callee = Callee(_addr); creates an instance of the 
+        //Callee contract using the address _addr, and this instance is stored in the 
+        //variable callee for further interaction with the Callee contract within the Caller contract.
+        callee.setX(_x);
+    }
+
+    function setXandSendEther(Callee _callee, uint _x) public payable {
+        (uint x, uint value) = _callee.setXandCallEther{value: msg.value}(_x);
+    }
+}
+
+ 
