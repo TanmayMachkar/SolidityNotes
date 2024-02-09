@@ -1,0 +1,72 @@
+creating contracts from a contract
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract Car{
+    address public owner;
+    string public model;
+    address public carAddr;
+
+    constructor(address _owner, string memory _model) payable{
+        owner = _owner;
+        model = _model;
+        carAddr = address(this); //this means the contract address itself
+    }
+}
+
+contract CarFactory{
+    Car[] public cars;
+
+    function create(address _owner, string memory _model) public {
+        Car car = new Car(_owner, _model);
+        cars.push(car);
+    }
+
+    function createAndSendEther(address _owner, string memory _model) public payable{
+        Car car = (new Car){value: msg.value}(_owner, _model);
+        cars.push(car);
+    }
+
+    function create2(
+        address _owner,
+        string memory _model,
+        bytes32 _salt
+    ) public{
+        Car car = (new Car){salt: _salt}(_owner, _model);
+        cars.push(car);
+    }
+    // In summary, the create2 function in the CarFactory 
+    // contract is used for deploying a new instance of the 
+    // Car contract with a specific salt value, allowing for 
+    // deterministic contract deployment and providing more 
+    // control over the contract's address.
+
+    function create2AndSendEther(
+        address _owner,
+        string memory _model,
+        bytes32 _salt
+    ) public payable {
+        Car car = (new Car){value: msg.value, salt: _salt}(_owner, _model);
+        cars.push(car);
+    }
+
+    function getCar(uint _index) public view returns (
+        address owner,
+        string memory model,
+        address carAddr,
+        uint balance
+    ){
+        Car car = cars[_index];
+        return (car.owner(), car.model(), car.carAddr(), address(car).balance);
+    }
+    // When you call car.owner(), car.model(), and car.carAddr() within the getCar 
+    // function, you are invoking these automatically generated getter functions to 
+    // retrieve the values of the owner, model, and carAddr variables stored in the 
+    // Car contract instance.
+    // In the line address(car).balance, car is an instance of the Car contract. By 
+    // casting it to address(car), you're converting it into an address type, allowing 
+    // you to access properties and functions associated with Ethereum addresses.
+}
+
+ 
