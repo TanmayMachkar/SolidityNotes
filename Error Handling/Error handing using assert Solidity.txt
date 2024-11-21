@@ -1,19 +1,35 @@
-assert solidity
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-contract assertStatement{
+/// @title Assert Statement Demonstration
+/// @notice This contract demonstrates the use of the `assert` statement in Solidity to check conditions.
+/// @dev The `assert` statement should only be used to catch conditions that are never expected to occur.
+
+contract AssertStatement {
+    // State variable to store the result of the overflow check
     bool result;
 
-    function overflow(uint256 _num1, uint256 _num2) public{
+    /// @notice Function to check if the sum of two numbers causes an overflow.
+    /// @dev Uses an assert statement to verify that the sum of the two inputs does not exceed 255.
+    /// @param _num1 The first unsigned integer input.
+    /// @param _num2 The second unsigned integer input.
+    function overflow(uint256 _num1, uint256 _num2) public {
+        // Calculate the sum of the two input numbers
         uint256 sum = _num1 + _num2;
+
+        // Assert that the sum does not exceed 255
+        // If this condition is false, the transaction will revert with an error.
         assert(sum <= 255);
+
+        // If the assertion passes, update the result to true
         result = true;
     }
 
-    function getResult() public view returns(string memory)
-    {
+    /// @notice Function to get the result of the overflow check.
+    /// @dev Returns a string message based on the value of the `result` variable.
+    /// @return A string message indicating whether an overflow occurred or not.
+    function getResult() public view returns (string memory) {
+        // Use a ternary operator to return the appropriate message
         return result == true ? "No overflow" : "Overflow exists";
     }
 }
